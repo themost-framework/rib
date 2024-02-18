@@ -1,0 +1,28 @@
+{
+    "plugins": [
+        "jasmine"
+    ],
+    "parser": "@babel/eslint-parser",
+    "env": {
+		"browser": false,
+		"node": true,
+        "es6": true,
+        "jasmine": true
+	},
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "globals": {
+    },
+    "rules": {
+        "no-var": "warn",
+        "quotes": [
+            "warn",
+            "single"
+        ]
+    }
+}
