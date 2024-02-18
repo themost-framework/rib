@@ -1,0 +1,7 @@
+class Extractor {
+
+}
+
+export {
+    Extractor
+}
