@@ -2,5 +2,4 @@ image:
   file: .gitpod.dockerfile
 
 tasks:
-  - init: npm i
-  - command: git clone https://github.com/devrimgunduz/pagila.git /workspace/pagila && createdb -U gitpod pagila && psql -U gitpod pagila < /workspace/pagila/pagila-schema.sql && psql -U gitpod pagila < /workspace/pagila/pagila-data.sql
+  - init: npm i && git clone https://github.com/devrimgunduz/pagila.git /workspace/pagila && createdb -U gitpod pagila && psql -U gitpod pagila < /workspace/pagila/pagila-schema.sql && psql -U gitpod pagila < /workspace/pagila/pagila-data.sql
