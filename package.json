@@ -18,7 +18,7 @@
     "@babel/register": "^7.23.7",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.0",
-    "@themost/common": "^2.10.4",
+    "@themost/common": "^2.11.1",
     "@themost/data": "^2.11.4",
     "@themost/express": "^1.6.2",
     "@themost/json-logger": "^1.3.0",

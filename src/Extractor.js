@@ -1,3 +1,5 @@
+import { PostgreSQLDialect } from './dialects/PostgreSQLDialect';
+
 class ExtractorConfiguration {
     /**
      * @type {string[]=}
@@ -29,6 +31,11 @@ class Extractor {
      */
     constructor(options) {
         this.options = options;
+
+        this.dialects = [
+            new PostgreSQLDialect()
+        ]
+
     }
 
     /**
@@ -52,6 +59,25 @@ class Extractor {
         }
         this._db = createInstance(adapter.options);
         return this._db;
+    }
+
+    get dialect() {
+        if (this._dialect) {
+            return this._dialect;
+        }
+        const adapter = this.options.adapters.find((item) => item.default === true);
+        if (adapter == null) {
+            throw new Error('Invalid configuration. The default database connection is missing.');
+        }
+        const adapterType = this.options.adapterTypes.find((item) => item.invariantName === adapter.invariantName);
+        if (adapterType == null) {
+            throw new Error('Invalid configuration. The default database connection type is missing.');
+        }
+        this._dialect = this.dialects.find((item) => item.adapterType === adapterType.type);
+        if (this._dialect == null) {
+            throw new Error(`Invalid configuration. The dialect for adapter type ${adapterType.type} is missing.`);
+        }
+        return this._dialect;
     }
 
     /**
@@ -99,6 +125,8 @@ class Extractor {
      * @returns {Promise<import('@themost/common').DataModelProperties>} 
      */
     async extractSingle(name, options) {
+        // get current dialect
+        const dialect = this.dialect;
         // get table helper
         const table = this.db.table(name);
         //  get columns
@@ -118,7 +146,7 @@ class Extractor {
         }
         const primaryKey = columns.filter((item) => item.primary);
         for (const column of columns) {
-            const field = this.db.formatColumn(column);
+            const field = dialect.formatColumn(column);
             model.fields.push(field);
         }
         // add primary key constraint
