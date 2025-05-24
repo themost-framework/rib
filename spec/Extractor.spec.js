@@ -1,4 +1,4 @@
-import { Extractor, SetSealedAttribute, UnderscoreIdConverter } from '@themost/rib';
+import { Extractor, SetSealedAttribute, UnderscoreIdConverter, SnakeCaseNameConverter, StartCaseNameConverter } from '@themost/rib';
 import config from './rib.config';
 import { mkdir, writeFile } from 'fs/promises';
 import { randomBytes } from 'crypto';
@@ -45,8 +45,10 @@ describe('Extractor', () => {
          * @type {Array<import('@themost/rib').SchemaParser>}
          */
         const parsers = [
-            new UnderscoreIdConverter(results),
-            new SetSealedAttribute(results)
+            new SnakeCaseNameConverter(results),
+            new StartCaseNameConverter(results),
+            new SetSealedAttribute(results),
+            new UnderscoreIdConverter(results)
         ];
 
         for (const parser of parsers) {

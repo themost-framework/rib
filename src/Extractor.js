@@ -116,27 +116,9 @@ class Extractor {
             fields: [],
             constraints: []
         }
-        const types = this.db.types;
         const primaryKey = columns.filter((item) => item.primary);
         for (const column of columns) {
-            // find type
-            const type = types.find((item) => {
-                return item[0] === column.type;
-            });
-            const field = {
-                name: column.name,
-                type: type ? type[1] : 'Unknown',
-                nullable: column.nullable
-            }
-            if (column.primary && primaryKey.length === 1) {
-                field.primary = true;
-            }
-            if (column.description) {
-                field.description = column.description;
-            }
-            if (column.size) {
-                field.size = column.size;
-            }
+            const field = this.db.formatColumn(column);
             model.fields.push(field);
         }
         // add primary key constraint

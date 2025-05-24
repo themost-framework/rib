@@ -21,7 +21,7 @@ class UnderscoreIdConverter extends SchemaParser {
             // get the field name without the _id suffix
             const name = field.name.replace(/_id$/, '');
             // try to check if a model with the same name exists
-            const parent = this.schemas.find(s => s.name === name && s.name !== schema.name);
+            const parent = this.schemas.find(s => s.source === name && s.source !== schema.source);
             if (parent) {
                 const parentField = parent.fields.find((f) => f.name === field.name);
                 if (parentField && parentField.primary) {
