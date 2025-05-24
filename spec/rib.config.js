@@ -1,13 +1,12 @@
 /* eslint-disable quotes */
 module.exports = {
-    "options": {
-        "schemaNamingConvention": [
-            "undescore_id"
+    "schemaNamingConvention": [
+            "underscore_id"
         ],
         "exclude": [
-            "payment_*"
-        ]
-    },
+            "payment_*",
+            "migrations"
+        ],
     "adapterTypes": [
         {
             "invariantName": "postgres",
@@ -21,10 +20,10 @@ module.exports = {
             "default": true,
             "options": {
                 "host": "localhost",
-                "post": 5432,
-                "user": "gitpod",
-                "password": "",
-                "database": "pagila"
+                "port": 5433,
+                "user": "postgres",
+                "password": "4nvCzsNA*DdwKRnS=AuLe5Ts",
+                "database": "chinook"
             }
         }
     ]

@@ -24,6 +24,13 @@ coverage
 
 # nyc test coverage
 .nyc_output
+coverage/
+
+# test
+jest.config.js
+jest.setup.js
+spec/rib.config.development.js
+.tmp
 
 # Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
@@ -39,6 +46,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
