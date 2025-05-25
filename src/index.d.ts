@@ -1,3 +1,4 @@
+export * from './dialects/index';
 export * from './Extractor';
 export * from './SchemaParser';
 export * from './NameConverter';

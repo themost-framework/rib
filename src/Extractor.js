@@ -1,5 +1,5 @@
 import { PostgreSQLDialect } from './dialects/PostgreSQLDialect';
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, writeFile, stat } from 'fs/promises';
 import path from 'path';
 import { randomBytes } from 'crypto';
 import { MySQLDialect } from './dialects/MySQLDialect';
@@ -202,6 +202,18 @@ class Extractor {
         await mkdir(path.resolve(outDir, 'config', 'models'), { recursive: true });
         for (const schema of schemas) {
             const fileName = path.resolve(outDir, 'config', 'models', `${schema.name}.json`);
+            try {
+                const fileStats = await stat(fileName);
+                if (fileStats.isFile()) {
+                    this.logger.warn(`File already exists: ${fileName}. Skipping export.`);
+                    continue;
+                }
+            } catch (err) {
+                // file does not exist, we can proceed
+                if (err.code !== 'ENOENT') {
+                    throw err;
+                }
+            }
             this.logger.info(`Exporting schema for table: ${schema.name} at ${fileName}`);
             await writeFile(fileName, JSON.stringify(schema, null, 2));
         }
