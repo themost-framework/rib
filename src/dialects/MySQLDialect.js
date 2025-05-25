@@ -2,6 +2,7 @@ import { SqlDialect } from './SqlDialect';
 
 const sqlTypes = new Map([
     ['int', 'Integer'],
+    ['smallint', 'Integer'],
     ['integer', 'Integer'],
     ['float', 'Number'],
     ['varchar', 'Text'],

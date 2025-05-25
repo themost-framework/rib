@@ -12,3 +12,7 @@ export declare class StartCaseNameConverter extends SchemaParser {
 export declare class KebabCaseNameConverter extends SchemaParser {
     constructor(schema: DataModelProperties[]);
 }
+
+export declare class SingularNameConverter extends SchemaParser {
+    constructor(schema: DataModelProperties[]);
+}

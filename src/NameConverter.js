@@ -1,5 +1,6 @@
 import { SchemaParser } from './SchemaParser';
 import { camelCase, startCase } from 'lodash';
+import { singular } from 'pluralize';
 
 class SnakeCaseNameConverter extends SchemaParser {
   constructor(schemas) {
@@ -51,8 +52,23 @@ class StartCaseNameConverter extends SchemaParser {
   }
 }
 
+class SingularNameConverter extends SchemaParser {
+  constructor(schemas) {
+    super(schemas);
+  }
+    /**
+     * 
+     * @param {import('@themost/common').DataModelProperties} schema 
+     * @returns void
+     */
+  async parse(schema) {
+    schema.name = singular(schema.name);
+  }
+}
+
 export {
     SnakeCaseNameConverter,
     StartCaseNameConverter,
-    KebabCaseNameConverter
+    KebabCaseNameConverter,
+    SingularNameConverter
 }
