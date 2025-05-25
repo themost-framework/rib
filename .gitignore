@@ -27,8 +27,6 @@ coverage
 coverage/
 
 # test
-jest.config.js
-jest.setup.js
 spec/rib.config.development.js
 .tmp
 
