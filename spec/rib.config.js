@@ -1,12 +1,18 @@
+const { SnakeCaseNameConverter, StartCaseNameConverter, SetSealedAttribute, UnderscoreIdConverter } = require('@themost/rib');
+
 /* eslint-disable quotes */
 module.exports = {
-    "schemaNamingConvention": [
-            "underscore_id"
-        ],
-        "exclude": [
-            "payment_*",
-            "migrations"
-        ],
+    "parsers": [
+        SnakeCaseNameConverter,
+        StartCaseNameConverter,
+        SetSealedAttribute,
+        UnderscoreIdConverter
+    ],
+    "rootNamespace": "https://themost.io/schemas",
+    "exclude": [
+        "payment_*",
+        "migrations"
+    ],
     "adapterTypes": [
         {
             "invariantName": "postgres",

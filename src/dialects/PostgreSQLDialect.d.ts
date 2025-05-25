@@ -1,4 +1,3 @@
-export declare class PostgreSQLDialect {
-    static readonly adapterType: string;
-    static readonly sqlTypes: Map<string, string>;
+import { SqlDialect } from './SqlDialect';
+export declare class PostgreSQLDialect extends SqlDialect {
 }

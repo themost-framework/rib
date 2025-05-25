@@ -22,6 +22,7 @@
     "@themost/data": "^2.11.4",
     "@themost/express": "^1.6.2",
     "@themost/json-logger": "^1.3.0",
+    "@themost/mysql": "^2.11.0",
     "@themost/pg": "^2.13.0",
     "@themost/query": "^2.11.2",
     "@themost/web": "^2.6.0",
