@@ -9,6 +9,9 @@
     "test": "jest",
     "build": "rimraf dist && rollup -c rollup.config.js"
   },
+  "bin": {
+    "rib": "dist/rib.js"
+  },
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -18,6 +21,7 @@
     "@babel/register": "^7.23.7",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-json": "^6.1.0",
     "@themost/common": "^2.11.1",
     "@themost/data": "^2.11.4",
     "@themost/express": "^1.6.2",
@@ -41,6 +45,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
+    "minimist": "^1.2.8",
     "pluralize": "^8.0.0"
   }
 }
