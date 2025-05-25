@@ -3,7 +3,7 @@ import config from './rib.config';
 import { mkdir, writeFile } from 'fs/promises';
 import { randomBytes } from 'crypto';
 
-describe('Extractor', () => {
+describe('PostgreSQLDialect', () => {
     it('should create instance', () => {
         const service = new Extractor(config);
         expect(service).toBeInstanceOf(Extractor);
@@ -38,7 +38,7 @@ describe('Extractor', () => {
     it('should convert table to schema', async () => {
         const service = new Extractor(config);
         const tables = await service.tables();
-        const results = await service.extract(tables.map(t => t.name));
+        const results = await service.extractMany(tables.map(t => t.name));
         expect(Array.isArray(results)).toBeTruthy();
 
         /**

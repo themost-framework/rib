@@ -3,24 +3,21 @@ import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { randomBytes } from 'crypto';
 import { MySQLDialect } from './dialects/MySQLDialect';
+import { TraceUtils } from '@themost/common';
 
-class ExtractorConfiguration {
-    /**
-     * @type {string[]=}
-     */
-    exclude = [];
-    /**
-     * @type {Function[]=}
-     */
-    parsers = [];
-    /**
-     * @type {import('@themost/data').DataAdapterTypeConfiguration[]}
-     */
-    adapterTypes = [];
-    /**
-     * @type {import('@themost/data').DataAdapterConfiguration[]}
-     */
-    adapters = [];
+/**
+ * 
+ * @returns {import('@themost/common').TraceLogger}
+ */
+function createLogger() {
+    if (typeof TraceUtils.newLogger === 'function') {
+        return TraceUtils.newLogger();
+    }
+    const [loggerProperty] = Object.getOwnPropertySymbols(TraceUtils);
+    const logger = TraceUtils[loggerProperty];
+    const newLogger = Object.create(TraceUtils[loggerProperty]);
+    newLogger.options = Object.assign({}, logger.options);
+    return newLogger;
 }
 
 class Extractor {
@@ -31,14 +28,15 @@ class Extractor {
     _db = null;
 
     /**
-     * @param {ExtractorConfiguration} options 
+     * @param {import('./Extractor').ExtractorConfiguration} options 
      */
     constructor(options) {
         this.options = options;
         this.dialects = [
             new PostgreSQLDialect(),
             new MySQLDialect()
-        ]
+        ];
+        this.logger = createLogger();
     }
 
     /**
@@ -121,7 +119,7 @@ class Extractor {
      * @param {{rootNamespace: string}=} options
      * @returns {Promise<Array<import('@themost/common').DataModelProperties>>} 
      */
-    async extract(tables, options)  {
+    async extractMany(tables, options)  {
         const results = [];
         for (const table of tables) {
             const model = await this.extractOne(table, options);
@@ -130,13 +128,16 @@ class Extractor {
         return results;
     }
 
-    async extractAny() {
+    async extract() {
         const tables = await this.tables();
-        const schemas = await this.extract(tables.map(t => t.name), {
+        this.logger.info(`Found ${tables.length} tables in the database.`);
+        const schemas = await this.extractMany(tables.map(t => t.name), {
             rootNamespace: this.options.rootNamespace || 'https://themost.io/schemas'
         });
-        const parsers = this.options.parsers;
+        const parsers = this.options.parsers || [];
+        this.logger.info(`Found ${parsers.length} schema parsers.`);
         for (const SchemaParserCtor of parsers) {
+            this.logger.info(`Using schema parser: ${SchemaParserCtor.name}`);
             const parser = new SchemaParserCtor(schemas);
             for (const schema of schemas) {
                 if (typeof parser.parse === 'function') {
@@ -158,6 +159,7 @@ class Extractor {
     async extractOne(name, options) {
         // get current dialect
         const dialect = this.dialect;
+        this.logger.info(`Extracting schema for table: ${name}`);
         // get table helper
         const table = this.db.table(name);
         //  get columns
@@ -196,10 +198,11 @@ class Extractor {
      * @returns {void}
      */
     async export(outDir) {
-        const schemas = await this.extractAny();
+        const schemas = await this.extract();
         await mkdir(path.resolve(outDir, 'config', 'models'), { recursive: true });
         for (const schema of schemas) {
             const fileName = path.resolve(outDir, 'config', 'models', `${schema.name}.json`);
+            this.logger.info(`Exporting schema for table: ${schema.name} at ${fileName}`);
             await writeFile(fileName, JSON.stringify(schema, null, 2));
         }
         const { adapterTypes, adapters } = this.options;
@@ -243,6 +246,5 @@ class Extractor {
 }
 
 export {
-    ExtractorConfiguration,
     Extractor
 }
