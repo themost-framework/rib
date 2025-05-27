@@ -1,12 +1,10 @@
-const { SnakeCaseNameConverter, StartCaseNameConverter, UnderscoreIdConverter, SingularNameConverter } = require('@themost/rib');
-
 /* eslint-disable quotes */
 module.exports = {
     "parsers": [
-        SnakeCaseNameConverter,
-        SingularNameConverter,
-        StartCaseNameConverter,
-        UnderscoreIdConverter
+        "@themost/rib#SnakeCaseNameConverter",
+        "@themost/rib#SingularNameConverter",
+        "@themost/rib#StartCaseNameConverter",
+        "@themost/rib#UnderscoreIdConverter"
     ],
     "rootNamespace": "https://themost.io/schemas",
     "exclude": [

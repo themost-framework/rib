@@ -39,6 +39,45 @@ class Extractor {
         this.logger = createLogger();
     }
 
+    get parsers() {
+        const parsers = this.options.parsers || [];
+        return parsers.filter((parser) => {
+            return parser != null && (typeof parser === 'function' || typeof parser === 'string');
+        }).filter((parser) => {
+            if (typeof parser === 'string' && parser.startsWith('-')) {
+                return false; //exclude parsers that start with a hyphen
+            }
+            return true;
+        }).map((parser) => {
+            if (typeof parser === 'function') {
+                return parser;
+            }
+            if (typeof parser === 'string') {
+                const moduleOrClass = parser.split('#');
+                if (moduleOrClass.length === 1) {
+                    // assume that parser is a module
+                    const ParserCtor = require(parser);
+                    if (typeof ParserCtor === 'function') {
+                        return ParserCtor;
+                    }
+                    throw new Error(`${parser} does not export a class.`);
+                } else if (moduleOrClass.length === 2) {
+                    // assume that parser is a class in a module
+                    let [modulePath, memberName] = moduleOrClass;
+                    if (modulePath === '@themost/rib') { // add exception for internal @themost/rib classes
+                        modulePath = './index';
+                    }
+                    const module = require(modulePath);
+                    const MemberCtor = module[memberName];
+                    if (typeof MemberCtor === 'function') {
+                        return MemberCtor;
+                    }
+                    throw new Error(`${modulePath} does not export a class named ${memberName}.`);
+                }
+            }
+        });
+    }
+
     /**
      * @type {import('@themost/data').DataAdapter}
      */
@@ -134,7 +173,7 @@ class Extractor {
         const schemas = await this.extractMany(tables.map(t => t.name), {
             rootNamespace: this.options.rootNamespace || 'https://themost.io/schemas'
         });
-        const parsers = this.options.parsers || [];
+        const parsers = this.parsers;
         this.logger.info(`Found ${parsers.length} schema parsers.`);
         for (const SchemaParserCtor of parsers) {
             this.logger.info(`Using schema parser: ${SchemaParserCtor.name}`);

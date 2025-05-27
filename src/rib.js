@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { Extractor } from './index';
 import minimist from 'minimist';
-import { readFile } from 'fs/promises';
 import path from 'path';
 import packageJson from '../package.json';
 

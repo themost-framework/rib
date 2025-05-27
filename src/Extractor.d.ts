@@ -4,7 +4,7 @@ import { SqlDialect } from './dialects/SqlDialect';
 
 export declare interface ExtractorConfiguration {
     exclude?: string[];
-    parsers?: Function[];
+    parsers?: (Function | string)[];
     adapterTypes: DataAdapterTypeConfiguration[];
     adapters: DataAdapterConfiguration[];
 }
