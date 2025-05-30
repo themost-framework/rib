@@ -14,7 +14,12 @@ class SqlDialect {
      */
     formatColumn(column) {
         let type = column.type;
-        const sqlType = this.sqlTypes.get(type.toLowerCase());
+        let typeString = type.toLowerCase();
+        const [,typeMatch,,,typePrecision,typeScale] = /([a-zA-Z0-9\s]+)(\(((\d+),?(\d+)?)\))?/.exec(typeString);
+        if (typeMatch) {
+            typeString = typeMatch;
+        }
+        const sqlType = this.sqlTypes.get(typeString);
         if (sqlType) {
             type = sqlType;
         } else {
@@ -30,12 +35,21 @@ class SqlDialect {
         }
         if (typeof column.size === 'number') {
             result.size = column.size;
+        } else if (typePrecision) {
+            result.size = parseInt(typePrecision, 10);
         }
         if (typeof column.precision === 'number' && column.precision > 0) {
             result.precision = column.precision;
+        } else if (typePrecision) {
+            result.precision = parseInt(typePrecision, 10);
+        }
+        if (result.precision === result.size) {
+            delete result.precision;
         }
         if (typeof column.scale === 'number' && column.scale > 0) {
             result.scale = column.scale;
+        } else if (typeScale) {
+            result.scale = parseInt(typeScale, 10);
         }
         if (parseBoolean(column.primary)) {
             result.primary = true;

@@ -4,6 +4,7 @@ import path from 'path';
 import { randomBytes } from 'crypto';
 import { MySQLDialect } from './dialects/MySQLDialect';
 import { TraceUtils } from '@themost/common';
+import { SqliteDialect } from './dialects/SqliteDialect';
 
 /**
  * 
@@ -34,7 +35,8 @@ class Extractor {
         this.options = options;
         this.dialects = [
             new PostgreSQLDialect(),
-            new MySQLDialect()
+            new MySQLDialect(),
+            new SqliteDialect()
         ];
         this.logger = createLogger();
     }

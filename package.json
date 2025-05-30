@@ -29,6 +29,7 @@
     "@themost/mysql": "^2.11.0",
     "@themost/pg": "^2.13.0",
     "@themost/query": "^2.11.2",
+    "@themost/sqlite": "^2.10.1",
     "@themost/web": "^2.6.0",
     "@themost/xml": "^2.5.2",
     "@types/jasmine": "^5.1.4",
