@@ -1,0 +1,31 @@
+{
+    "parsers": [
+        "@themost/rib#SnakeCaseNameConverter",
+        "@themost/rib#StartCaseNameConverter",
+        "@themost/rib#UnderscoreIdConverter"
+    ],
+    "rootNamespace": "https://themost.io/schemas",
+    "exclude": [
+        "migrations"
+    ],
+    "adapterTypes": [
+        {
+            "invariantName": "pg",
+            "type": "@themost/pg"
+        }
+    ],
+    "adapters": [
+        {
+            "name": "source",
+            "invariantName": "pg",
+            "default": true,
+            "options": {
+                "host": "localhost",
+                "port": 5432,
+                "user": "postgres",
+                "password": "secret",
+                "database": "chinook"
+            }
+        }
+    ]
+}

@@ -5,6 +5,9 @@
         "paths": {
             "@themost/rib": [
                 "src/index"
+            ],
+            "@themost/pg": [
+                "modules/pg/src/index"
             ]
         }
     }
