@@ -13,6 +13,14 @@
     "rib": "dist/rib.js"
   },
   "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/themost-framework/rib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/themost-framework/rib/issues"
+  },
+  "homepage": "https://github.com/themost-framework/rib#readme",
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@babel/eslint-parser": "^7.23.10",
