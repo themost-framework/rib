@@ -28,7 +28,9 @@ describe('MySQLDialect', () => {
 
     it('should export sakila schema', async () => {
         const service = new Extractor(sakilaConfig);
-        await service.export(path.resolve(__dirname, '.tmp/sakila'));
+        await service.export(path.resolve(__dirname, '.tmp/sakila'), {
+            forceReplace: true
+        });
         await service.db.closeAsync();
     });
 

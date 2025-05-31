@@ -210,11 +210,14 @@ class Extractor {
          * @type {import('@themost/common').DataModelProperties}
          */
         const model = {
+            '$schema': 'https://themost-framework.github.io/themost/models/2018/2/schema.json',
             '@id': `${rootNamespace}#${name}`,
             name: name,
+            title: name,
             source: name,
             view: name,
             sealed: true,
+            version: '0.1.0',
             fields: [],
             constraints: []
         }
@@ -236,18 +239,25 @@ class Extractor {
 
     /**
      * @param {string} outDir
+     * @param {{forceReplace?:boolean}=} options
      * @returns {void}
      */
-    async export(outDir) {
+    async export(outDir, options) {
         const schemas = await this.extract();
         await mkdir(path.resolve(outDir, 'config', 'models'), { recursive: true });
+        const forceReplace = options && options.forceReplace;
         for (const schema of schemas) {
             const fileName = path.resolve(outDir, 'config', 'models', `${schema.name}.json`);
             try {
                 const fileStats = await stat(fileName);
                 if (fileStats.isFile()) {
-                    this.logger.warn(`File already exists: ${fileName}. Skipping export.`);
-                    continue;
+                    if (forceReplace) {
+                        this.logger.info(`Replacing existing file: ${fileName}`);
+                    } else {
+                        // skip file if it already exists
+                        this.logger.warn(`File already exists: ${fileName}. Skipping export.`);
+                        continue;
+                    }
                 }
             } catch (err) {
                 // file does not exist, we can proceed

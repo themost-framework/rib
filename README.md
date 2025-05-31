@@ -74,7 +74,9 @@ The previous example configuration will generate an API server that connects to 
 
 - StartCaseNameConverter: Converts database table names to start case e.g. `customer` to `Customer`.
 
-- UnderscoreIdConverter: Uses underscore identifiers for creating associations between entities 
+- UnderscoreIdConverter: Uses underscore identifiers for creating associations between entities
+
+- IdConverter: Searches for attributes that follow the pattern `*Id` and defines associations between entities.
 
 
 

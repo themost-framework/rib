@@ -2,7 +2,7 @@ import { SqlDialect } from './SqlDialect';
 
 const sqlTypes = new Map([
     ['int', 'Integer'],
-    ['smallint', 'Integer'],
+    ['smallint', 'Integer(2)'],
     ['integer', 'Integer'],
     ['float', 'Number'],
     ['varchar', 'Text'],
@@ -16,18 +16,18 @@ const sqlTypes = new Map([
     ['binary', 'Binary'],
     ['varbinary', 'Binary'],
     ['blob', 'Binary'],
-    ['tinyblob', 'Binary'],
-    ['mediumblob', 'Binary'],
-    ['longblob', 'Binary'],
+    ['tinyblob', 'Binary(255)'],
+    ['mediumblob', 'Binary(16777215)'],
+    ['longblob', 'Binary(4294967295)'],
     ['text', 'Text'],
     ['boolean', 'Boolean'],
-    ['tinyint', 'Integer'],
-    ['mediumint', 'Integer'],
-    ['bigint', 'Integer'],
+    ['tinyint', 'Integer(1)'],
+    ['mediumint', 'Integer(3)'],
+    ['bigint', 'Integer(8)'],
     ['char', 'Text'],
-    ['longtext', 'Text'],
-    ['mediumtext', 'Text'],
-    ['tinytext', 'Text'],
+    ['longtext', 'Text(4294967295)'],
+    ['mediumtext', 'Text(16777215)'],
+    ['tinytext', 'Text(255)'],
     ['enum', 'String'],
     ['set', 'String']
 ]);
@@ -44,35 +44,6 @@ class MySQLDialect extends SqlDialect {
 
     get sqlTypes() {
         return sqlTypes;
-    }
-
-    /**
-     * 
-     * @param {import('@themost/common').DataAdapterBase} db 
-     * @returns 
-     */
-    tables(db) {
-        return {
-            list: function (callback) {
-                db.execute('SELECT `TABLE_NAME` AS `name` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = DATABASE()', null, function (err, results) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    return callback(null, results);
-                });
-            },
-            listAsync: function () {
-                const self = this;
-                return new Promise((resolve, reject) => {
-                    self.list((err, results) => {
-                        if (err) {
-                            return reject(err);
-                        }
-                        return resolve(results);
-                    });
-                });
-            }
-        }
     }
 
 }

@@ -14,7 +14,9 @@ describe('sqlite', () => {
 
     it('should export schema', async () => {
         const service = new Extractor(chinookConfig);
-        await service.export(path.resolve(__dirname, '.tmp/sqlite'));
+        await service.export(path.resolve(__dirname, '.tmp/sqlite'), {
+            forceReplace: true
+        });
         await service.db.closeAsync();
     });
 

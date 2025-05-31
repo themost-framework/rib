@@ -19,9 +19,10 @@ class SqlDialect {
         if (typeMatch) {
             typeString = typeMatch;
         }
-        const sqlType = this.sqlTypes.get(typeString);
-        if (sqlType) {
-            type = sqlType;
+        const sqlTypeString = this.sqlTypes.get(typeString);
+        const [,fieldType,,,fieldSize,fieldScale] = /([a-zA-Z0-9\s]+)(\(((\d+),?(\d+)?)\))?/.exec(sqlTypeString);
+        if (fieldType) {
+            type = fieldType;
         } else {
             type = 'Unknown';
         }
@@ -39,9 +40,9 @@ class SqlDialect {
             result.size = parseInt(typePrecision, 10);
         }
         if (typeof column.precision === 'number' && column.precision > 0) {
-            result.precision = column.precision;
+            result.size = column.precision;
         } else if (typePrecision) {
-            result.precision = parseInt(typePrecision, 10);
+            result.size = parseInt(typePrecision, 10);
         }
         if (result.precision === result.size) {
             delete result.precision;
@@ -51,6 +52,15 @@ class SqlDialect {
         } else if (typeScale) {
             result.scale = parseInt(typeScale, 10);
         }
+
+        // force set size and scale
+        if (fieldSize) {
+            column.size = parseInt(fieldSize, 10);
+        }
+        if (fieldScale) {
+            column.scale = parseInt(fieldScale, 10);
+        }
+
         if (parseBoolean(column.primary)) {
             result.primary = true;
         }

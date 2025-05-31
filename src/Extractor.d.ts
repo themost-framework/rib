@@ -18,5 +18,5 @@ export declare class Extractor {
     get dialect(): SqlDialect;
     async extract(): Promise<DataModelProperties[]>;
     async extractOne(name: string): DataModelProperties;
-    async export(outDir: string): Promise<void>;
+    async export(outDir: string, options?: { forceReplace?: boolean }): Promise<void>;
 }
