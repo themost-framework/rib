@@ -32,3 +32,9 @@ rollup.config.js
 # gitpod
 .gitpod.yml
 .gitpod.dockerfile
+
+# test
+jest.config.js
+coverage
+jest.setup.js
+modules

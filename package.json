@@ -1,5 +1,5 @@
 {
-  "name": "@themost/create-lib",
+  "name": "@themost/rib",
   "version": "1.0.0",
   "description": "@themost-framework template for creating a library",
   "main": "dist/index.js",
