@@ -317,6 +317,9 @@ class Extractor {
      * @returns {void}
      */
     async export(outDir, options) {
+        this.options.outDir = outDir;
+        this.logger.info(`Exporting schemas to ${outDir}`);
+        await this.init();
         const schemas = await this.extract();
         await mkdir(path.resolve(outDir, 'config', 'models'), { recursive: true });
         const forceReplace = options && options.forceReplace;
