@@ -14,7 +14,7 @@ module.exports = {
     "adapterTypes": [
         {
             "invariantName": "sqlite",
-            "type": "@themost/sqlite"
+            "type": "@themost/sqlite1"
         }
     ],
     "adapters": [

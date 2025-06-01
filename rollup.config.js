@@ -26,7 +26,8 @@ module.exports = [
         output: {
             dir: 'dist',
             format: 'cjs',
-            sourcemap: true
+            sourcemap: true,
+            banner: '#!/usr/bin/env node'
         },
         external: external.concat('./index', '../package.json'),
         plugins: [
