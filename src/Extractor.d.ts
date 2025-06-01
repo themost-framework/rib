@@ -3,6 +3,7 @@ import { DataAdapter, DataAdapterConfiguration, DataAdapterTypeConfiguration } f
 import { SqlDialect } from './dialects/SqlDialect';
 
 export declare interface ExtractorConfiguration {
+    outDir?: string;
     exclude?: string[];
     parsers?: (Function | string)[];
     adapterTypes: DataAdapterTypeConfiguration[];

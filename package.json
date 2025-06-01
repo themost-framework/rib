@@ -34,10 +34,7 @@
     "@themost/data": "^2.11.4",
     "@themost/express": "^1.6.2",
     "@themost/json-logger": "^1.3.0",
-    "@themost/mysql": "^2.11.2",
-    "@themost/pg": "^2.13.0",
-    "@themost/query": "^2.11.2",
-    "@themost/sqlite": "^2.10.1",
+    "@themost/query": "^2.14.12",
     "@themost/web": "^2.6.0",
     "@themost/xml": "^2.5.2",
     "@types/jasmine": "^5.1.4",
@@ -53,6 +50,8 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
+    "@themost/common": "^2.11.1",
+    "@themost/query": "^2.14.12",
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
     "pluralize": "^8.0.0"

@@ -5,6 +5,9 @@ import { randomBytes } from 'crypto';
 import { MySQLDialect } from './dialects/MySQLDialect';
 import { TraceUtils } from '@themost/common';
 import { SqliteDialect } from './dialects/SqliteDialect';
+import child_process from 'child_process';
+import util from 'util';
+const execAsync = util.promisify(child_process.exec);
 
 /**
  * 
@@ -40,6 +43,70 @@ class Extractor {
         ];
         this.logger = createLogger();
     }
+
+
+    async init() {
+        const cwd = path.resolve(process.cwd(), this.options.outDir || '.');
+        const encoding = 'utf8';
+        // eslint-disable-next-line no-unused-vars
+        this.logger.info(`Initializing npm in ${cwd}`);
+        await execAsync('npm init -y', {
+            cwd,
+            encoding
+        });
+        // get adapter types and try to install them
+        const adapterTypes = this.options.adapterTypes || [];
+        for (const adapterType of adapterTypes) {
+            if (adapterType.type && typeof adapterType.type === 'string') {
+                let lsJson;
+                try {
+                    const lsOut = await execAsync(`npm ls ${adapterType.type} --json`, {
+                        cwd,
+                        encoding
+                    });
+                    lsJson = JSON.parse(lsOut.stdout);
+                } catch (err) {
+                    if (err.code === 1) {
+                        // npm ls command failed, probably the package is not installed
+                        lsJson = JSON.parse(err.stdout);
+                    } else {
+                        throw err.stderr;
+                    }
+                }
+                if (lsJson.dependencies && lsJson.dependencies[adapterType.type] && lsJson.dependencies[adapterType.type].version) {
+                    this.logger.info(`Adapter type ${adapterType.type} is already installed.`);
+                } else {
+                    this.logger.info(`Installing adapter type ${adapterType.type}...`);
+                    // install adapter type
+                    try {
+                        const installOut = await execAsync(`npm install ${adapterType.type} --json`, {
+                            cwd,
+                            encoding
+                        });
+                        const installJson = JSON.parse(installOut.stdout);
+                        if (installJson && installJson.added) {
+                            this.logger.info(`${installJson.added} package(s) added.`);
+                        }
+                        if (installJson && installJson.removed) {
+                            this.logger.info(`${installJson.removed} package(s) removed.`);
+                        }
+                        if (installJson && installJson.changed) {
+                            this.logger.info(`${installJson.changed} package(s) changed.`);
+                        }
+                        this.logger.info(`Adapter type ${adapterType.type} installed successfully.`);
+                    } catch (err) {
+                        const errorJson = JSON.parse(err.stdout);
+                        const errorMessage = errorJson && errorJson.error ? errorJson.error.detail : err.message;
+                        const formattedError = errorMessage.replace(/\n+/g, ' ').trim();
+                        this.logger.error(`Failed to install adapter type ${adapterType.type}: ${formattedError}`);
+                        throw formattedError;
+                    }
+                }
+            }
+        }
+        
+    }
+
 
     get parsers() {
         const parsers = this.options.parsers || [];
@@ -95,7 +162,14 @@ class Extractor {
         if (adapterType == null) {
             throw new Error('Invalid configuration. The default database connection type is missing.');
         }
-        const {createInstance} = require(adapterType.type);
+        // resolve adapter module path using require.resolve
+        const modulePath = require.resolve(adapterType.type, {
+            paths: [
+                path.resolve(process.cwd(), 'node_modules'),
+                path.resolve(process.cwd(), this.options.outDir , 'node_modules'),
+            ]
+        });
+        const { createInstance } = require(modulePath);
         if (typeof createInstance !== 'function') {
             throw new Error('The specified adapter type is invalid. Adapter module does not export createInstance method.')
         }
