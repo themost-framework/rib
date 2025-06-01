@@ -6,7 +6,6 @@
     ],
     "rootNamespace": "https://themost.io/schemas",
     "exclude": [
-        "migrations"
     ],
     "adapterTypes": [
         {

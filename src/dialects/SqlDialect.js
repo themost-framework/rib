@@ -65,7 +65,7 @@ class SqlDialect {
             result.primary = true;
         }
         if (typeof column.defaultValue === 'string' && column.defaultValue.length > 0) {
-            if (column.default.startsWith('nextval')) {
+            if (column.defaultValue.startsWith('nextval')) {
                 result.readonly = true;
             }
         }

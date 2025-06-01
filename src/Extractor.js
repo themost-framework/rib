@@ -215,13 +215,15 @@ class Extractor {
             }
             tables = await db.tables().listAsync();
         }
+        // check if table is excluded
+        const exclude = (this.options.exclude || []).map((pattern) => {
+            return new RegExp('^' + pattern.replace('*', '(.+)') + '$', 'i')
+        });
+        exclude.push(/^migrations$/i); // exclude system tables
         return tables.filter((item) => {
-            // check if table is excluded
-            if (this.options.exclude && this.options.exclude.length > 0) {
-                for (const pattern of this.options.exclude) {
-                    if (item.name.match(new RegExp(pattern))) {
-                        return false;
-                    }
+            for (const pattern of exclude) {
+                if (pattern.test(item.name)) {
+                    return false;
                 }
             }
             return true;
