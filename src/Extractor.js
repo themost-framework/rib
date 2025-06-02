@@ -7,6 +7,7 @@ import { TraceUtils } from '@themost/common';
 import { SqliteDialect } from './dialects/SqliteDialect';
 import child_process from 'child_process';
 import util from 'util';
+import { SqlServerDialect } from './dialects/SqlServerDialect';
 const execAsync = util.promisify(child_process.exec);
 
 /**
@@ -39,7 +40,8 @@ class Extractor {
         this.dialects = [
             new PostgreSQLDialect(),
             new MySQLDialect(),
-            new SqliteDialect()
+            new SqliteDialect(),
+            new SqlServerDialect()
         ];
         this.logger = createLogger();
     }
@@ -47,6 +49,14 @@ class Extractor {
 
     async init() {
         const cwd = path.resolve(process.cwd(), this.options.outDir || '.');
+        this.logger.info(`Creating directory ${cwd}`);
+        try {
+            await mkdir(cwd, { recursive: true });
+        } catch (err) {
+            if (err.code !== 'EEXIST') {
+                throw err;
+            }
+        }
         const encoding = 'utf8';
         // eslint-disable-next-line no-unused-vars
         this.logger.info(`Initializing npm in ${cwd}`);
