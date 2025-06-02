@@ -1,6 +1,6 @@
 {
   "name": "@themost/rib",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "@themost-framework template for creating a library",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
