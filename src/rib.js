@@ -12,16 +12,18 @@ import packageJson from '../package.json';
             c: 'config',
             o: 'output',
             h: 'help',
+            r: 'replace',
             v: 'version'
         }
     });
     if (argv.help) {
         console.log('Usage: rib [options]');
         console.log('Options:');
-        console.log('  -c, --config <file>   Configuration file');
-        console.log('  -o, --output <path>   Output path');
-        console.log('  -h, --help            Show this help message');
-        console.log('  -v, --version         Show version information');
+        console.log('  -c, --config <file>      Configuration file');
+        console.log('  -o, --output <path>      Output path');
+        console.log('  -r, --replace <boolean>  Replace existing files');
+        console.log('  -h, --help               Show this help message');
+        console.log('  -v, --version            Show version information');
         return;
     }
     if (argv.version) {
@@ -40,11 +42,18 @@ import packageJson from '../package.json';
     // initialize extractor
     const extractor = new Extractor(config);
     // export data to output path
-    await extractor.export(argv.output);
+    const options = {
+        forceReplace: false
+    };
+    if (argv.replace) {
+        options.forceReplace = argv.replace;
+    }
+    await extractor.export(argv.output, options);
     // close database connection
-    extractor.db.closeAsync();
+    await extractor.db.closeAsync();
 })().then(() => {
     console.log('Extraction completed successfully.');
+    process.exit(0);
 }).catch((error) => {
     console.error('Error during extraction:', error.message);
     if (error.stack) {

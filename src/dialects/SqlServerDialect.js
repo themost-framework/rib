@@ -11,7 +11,7 @@ const sqlTypes = new Map([
     [ 'smallmoney', 'Decimal' ],
     [ 'numeric', 'Decimal' ],
     [ 'float', 'Float' ],
-    ['uniqueidentifier', 'Guid' ],
+    [ 'uniqueidentifier', 'Guid' ],
     [ 'timestamp', 'Text(8)' ],
     [ 'real', 'Float' ],
     [ 'char', 'Text(1)' ],
@@ -19,15 +19,18 @@ const sqlTypes = new Map([
     [ 'text', 'Text' ],
     [ 'nchar', 'Text(1)' ],
     [ 'nvarchar', 'Text' ],
+    [ 'ntext(16)', 'Text(1073741823)' ], // ntext is deprecated, but still supported. The size of 16 is used to indicate the maximum size.
     [ 'ntext', 'Text' ],
-    [ 'date', 'DateTime' ],
-    [ 'datetime', 'DateTime' ],
-    [ 'datetime2', 'DateTime' ],
+    [ 'date', 'DateTime(0)' ], // 
+    [ 'datetime', 'DateTime(0)' ],
+    [ 'datetime2', 'DateTime(0)' ],
     [ 'datetimeoffset', 'DateTimeOffset' ],
     [ 'smalldatetime', 'DateTime' ],
     [ 'time', 'Time' ],
     [ 'binary', 'Binary' ],
-    [ 'varbinary', 'Binary' ]
+    [ 'varbinary', 'Binary' ],
+    [ 'image(16)', 'Image(2147483647)' ], // image is deprecated, but still supported. The size of 16 is used to indicate the maximum size.
+    [ 'image', 'Image' ]
 ]);
 
 class SqlServerDialect extends SqlDialect {

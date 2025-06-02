@@ -5,6 +5,7 @@ import { SqlDialect } from './dialects/SqlDialect';
 export declare interface ExtractorConfiguration {
     outDir?: string;
     exclude?: string[];
+    include?: string[];
     parsers?: (Function | string)[];
     adapterTypes: DataAdapterTypeConfiguration[];
     adapters: DataAdapterConfiguration[];

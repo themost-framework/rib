@@ -230,7 +230,7 @@ class Extractor {
             return new RegExp('^' + pattern.replace('*', '(.+)') + '$', 'i')
         });
         exclude.push(/^migrations$/i); // exclude system tables
-        return tables.filter((item) => {
+        const results = tables.filter((item) => {
             for (const pattern of exclude) {
                 if (pattern.test(item.name)) {
                     return false;
@@ -238,6 +238,20 @@ class Extractor {
             }
             return true;
         });
+        if (this.options.include && this.options.include.length > 0) {
+            const include = (this.options.include || []).map((pattern) => {
+                return new RegExp('^' + pattern.replace('*', '(.+)') + '$', 'i')
+            });
+            return results.filter((item) => {
+                for (const pattern of include) {
+                    if (pattern.test(item.name)) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+        return results;
     }
 
     /**

@@ -1,15 +1,12 @@
-const { SnakeCaseNameConverter, StartCaseNameConverter, PrimaryKeyAssociation } = require('@themost/rib');
-
 /* eslint-disable quotes */
 module.exports = {
     "parsers": [
-        SnakeCaseNameConverter,
-        StartCaseNameConverter,
-        PrimaryKeyAssociation
+        "@themost/rib#SnakeCaseNameConverter",
+        "@themost/rib#StartCaseNameConverter",
+        "@themost/rib#SingularNameConverter",
+        "@themost/rib#PrimaryKeyAssociation"
     ],
     "rootNamespace": "https://themost.io/schemas",
-    "exclude": [
-    ],
     "adapterTypes": [
         {
             "invariantName": "mssql",

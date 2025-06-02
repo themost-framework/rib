@@ -19,7 +19,15 @@ class SqlDialect {
         if (typeMatch) {
             typeString = typeMatch;
         }
-        const sqlTypeString = this.sqlTypes.get(typeString);
+        let sqlTypeString;
+        if (column.size) {
+            typeString +=  column.scale ? `(${column.size},${column.scale})` : `(${column.size})`;
+            sqlTypeString = this.sqlTypes.get(typeString);
+        }
+        if (sqlTypeString == null) {
+            typeString = typeMatch;
+            sqlTypeString = this.sqlTypes.get(typeString);
+        }
         const [,fieldType,,,fieldSize,fieldScale] = /([a-zA-Z0-9\s]+)(\(((\d+),?(\d+)?)\))?/.exec(sqlTypeString);
         if (fieldType) {
             type = fieldType;
@@ -55,10 +63,18 @@ class SqlDialect {
 
         // force set size and scale
         if (fieldSize) {
-            column.size = parseInt(fieldSize, 10);
+            result.size = parseInt(fieldSize, 10);
         }
         if (fieldScale) {
-            column.scale = parseInt(fieldScale, 10);
+            result.scale = parseInt(fieldScale, 10);
+        }
+
+        if (typeof result.size === 'number' && result.size === 0) {
+            delete result.size;
+        }
+
+        if (typeof result.scale === 'number' && result.scale === 0) {
+            delete result.scale;
         }
 
         if (parseBoolean(column.primary)) {
